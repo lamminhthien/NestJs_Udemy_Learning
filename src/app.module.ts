@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { ReportsModule } from './task/task.module';
+import { TasksModule } from './task/task.module';
 import { User } from './users/user.entity';
 import { Task } from './task/task.entity';
 
@@ -20,7 +20,7 @@ import { Task } from './task/task.entity';
       synchronize: true,
     }),
     UsersModule,
-    ReportsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
