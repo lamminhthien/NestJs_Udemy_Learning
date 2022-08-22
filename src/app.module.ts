@@ -1,33 +1,60 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe, MiddlewareConsumer } from '@nestjs/common';
+import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { TasksModule } from './task/task.module';
-import { User } from './users/entities/user.entity';
-import { Task } from './task/entities/task.entity';
-import { Todolist } from './todolist/entities/todolist.entity';
-import { TodolistModule } from './todolist/todolist.module';
-import { CatModule } from './cat/cat.module';
+import { ReportsModule } from './reports/reports.module';
+import { User } from './users/user.entity';
+import { Report } from './reports/report.entity';
+const cookieSession = require('cookie-session');
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      database: 'postgres',
-      username: 'postgres',
-      password: 'thienlam',
-      port: 5432,
-      entities: [User, Task, Todolist],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get<string>('DB_NAME'),
+          synchronize: true,
+          entities: [User, Report],
+        };
+      },
+    }),
+    // TypeOrmModule.forRoot({
+    //   type: 'sqlite',
+    //   database: 'db.sqlite',
+    //   entities: [User, Report],
+    //   synchronize: true,
+    // }),
     UsersModule,
-    TasksModule,
-    TodolistModule,
-    CatModule,
+    ReportsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+      }),
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        cookieSession({
+          keys: ['asdfasfd'],
+        }),
+      )
+      .forRoutes('*');
+  }
+}
