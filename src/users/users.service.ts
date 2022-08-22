@@ -11,13 +11,14 @@ export class UsersService {
     return this.repo.find();
   }
 
-  create(user_name: string) {
+  async create(user_name: string): Promise<User> {
+    // Check if this username existing or not
     const user = this.repo.create({ user_name });
 
     return this.repo.save(user);
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.repo.findOne(id);
   }
 
@@ -25,16 +26,18 @@ export class UsersService {
     return this.repo.find({ user_name });
   }
 
-  async update(id: number, attrs: Partial<User>) {
+  async update(id: string, user_name: string) {
     const user = await this.findOne(id);
     if (!user) {
       throw new NotFoundException('user not found');
     }
-    Object.assign(user, attrs);
+    user.user_name = user_name;
+    // Object.assign(user, attrs);
+    // return this.repo.save(user);
     return this.repo.save(user);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const user = await this.findOne(id);
     if (!user) {
       throw new NotFoundException('user not found');

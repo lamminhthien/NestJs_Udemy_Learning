@@ -8,7 +8,6 @@ import {
   Query,
   Delete,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
@@ -31,5 +30,14 @@ export class TodolistController {
   @Post('/create')
   createUser(@Body() body: CreateTodolistDto) {
     this.todoListService.create(body.list_name);
+  }
+
+  @Get('/find-by-id/:id')
+  async findTodoList(@Param('id') id: string) {
+    const todoList = await this.todoListService.findOne(parseInt(id));
+    if (!todoList) {
+      throw new NotFoundException('Todolist not found');
+    }
+    return todoList;
   }
 }

@@ -16,7 +16,7 @@ export class Todolist {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   list_name: string;
 
   @OneToMany(() => Task, (task) => task.listId)

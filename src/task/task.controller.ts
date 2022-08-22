@@ -8,7 +8,6 @@ import {
   Query,
   Delete,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Serialize } from 'src/interceptors/serialize.interceptor';

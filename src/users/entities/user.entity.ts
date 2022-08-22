@@ -16,7 +16,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   user_name: string;
 
   @OneToMany(() => Task, (task) => task.userId)

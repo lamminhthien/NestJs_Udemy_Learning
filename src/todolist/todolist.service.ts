@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todolist } from './entities/todolist.entity';
@@ -16,9 +12,6 @@ export class TodolistService {
 
   create(list_name: string) {
     // Check if this list name existing or not
-    const todoListExistent = this.repo.find({ list_name });
-    if (todoListExistent)
-      throw new BadRequestException('This Todo List already existence');
     const todoList = this.repo.create({ list_name });
     return this.repo.save(todoList);
   }
