@@ -16,7 +16,7 @@ export class Todolist {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   list_name: string;
 
   @OneToMany(() => Task, (task) => task.listId)
@@ -30,16 +30,16 @@ export class Todolist {
 
   @AfterInsert()
   logInsert() {
-    console.log('Inserted User with id', this.id);
+    console.log('Inserted TodoListwith id', this.id);
   }
 
   @AfterUpdate()
   logUpdate() {
-    console.log('Updated User with id', this.id);
+    console.log('Updated TodoListwith id', this.id);
   }
 
   @AfterRemove()
   logRemove() {
-    console.log('Removed User with id', this.id);
+    console.log('Removed TodoListwith id', this.id);
   }
 }

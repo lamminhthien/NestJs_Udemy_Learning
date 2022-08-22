@@ -7,13 +7,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { Todolist } from 'src/todolist/entities/todolist.entity';
 
 @Entity()
 export class Task {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column({ unique: true })
   task_name: string;
 
   @CreateDateColumn()
@@ -23,11 +24,14 @@ export class Task {
   updatedDate: Date;
 
   @Column()
-  userId: number;
+  userId: string;
 
   @Column()
   listId: number;
 
-  @ManyToOne(() => User, (user) => user.reports)
+  @ManyToOne(() => User, (user) => user.id, { cascade: true })
   user: User;
+
+  @ManyToOne(() => Todolist, (todolist) => todolist.id, { cascade: true })
+  todolist: Todolist;
 }

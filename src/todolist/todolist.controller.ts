@@ -1,47 +1,35 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
+  Controller,
+  Post,
+  Get,
   Patch,
   Param,
+  Query,
   Delete,
+  NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { TodolistService } from './todolist.service';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateTodolistDto } from './dto/create-todolist.dto';
-import { UpdateTodolistDto } from './dto/update-todolist.dto';
+import { TodoListDto } from './dto/todolist.dto';
+import { Todolist } from './entities/todolist.entity';
+import { TodolistService } from './todolist.service';
 
 @Controller('todolist')
 @ApiTags('TodoList')
+@Serialize(TodoListDto)
 export class TodolistController {
-  constructor(private readonly todolistService: TodolistService) {}
+  constructor(private todoListService: TodolistService) {}
 
-  @Post()
-  create(@Body() createTodolistDto: CreateTodolistDto) {
-    return this.todolistService.create(createTodolistDto);
+  @Get('/get-all')
+  getAllUser(): Promise<Todolist[]> {
+    return this.todoListService.findAll();
   }
 
-  @Get()
-  findAll() {
-    return this.todolistService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.todolistService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTodolistDto: UpdateTodolistDto,
-  ) {
-    return this.todolistService.update(+id, updateTodolistDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.todolistService.remove(+id);
+  @Post('/create')
+  createUser(@Body() body: CreateTodolistDto) {
+    this.todoListService.create(body.list_name);
   }
 }

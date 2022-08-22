@@ -13,10 +13,10 @@ import { Task } from 'src/task/entities/task.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column({ unique: true })
   user_name: string;
 
   @OneToMany(() => Task, (task) => task.userId)

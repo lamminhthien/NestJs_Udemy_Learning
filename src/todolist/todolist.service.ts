@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTodolistDto } from './dto/create-todolist.dto';
-import { UpdateTodolistDto } from './dto/update-todolist.dto';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Todolist } from './entities/todolist.entity';
 
 @Injectable()
 export class TodolistService {
-  create(createTodolistDto: CreateTodolistDto) {
-    return 'This action adds a new todolist';
+  constructor(@InjectRepository(Todolist) private repo: Repository<Todolist>) {}
+  async findAll(): Promise<Todolist[]> {
+    return this.repo.find();
   }
 
-  findAll() {
-    return `This action returns all todolist`;
+  create(list_name: string) {
+    // Check if this list name existing or not
+    const todoListExistent = this.repo.find({ list_name });
+    if (todoListExistent)
+      throw new BadRequestException('This Todo List already existence');
+    const todoList = this.repo.create({ list_name });
+    return this.repo.save(todoList);
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} todolist`;
+    return this.repo.findOne(id);
   }
 
-  update(id: number, updateTodolistDto: UpdateTodolistDto) {
-    return `This action updates a #${id} todolist`;
+  find(list_name: string) {
+    return this.repo.find({ list_name });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} todolist`;
+  async update(id: number, attrs: Partial<Todolist>) {
+    const todoList = await this.findOne(id);
+    if (!todoList) {
+      throw new NotFoundException('todoList not found');
+    }
+    Object.assign(todoList, attrs);
+    return this.repo.save(todoList);
+  }
+
+  async remove(id: number) {
+    const todoList = await this.findOne(id);
+    if (!todoList) {
+      throw new NotFoundException('todoList not found');
+    }
+    return this.repo.remove(todoList);
   }
 }
