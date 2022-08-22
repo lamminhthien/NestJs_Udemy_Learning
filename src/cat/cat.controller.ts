@@ -35,8 +35,8 @@ export class CatController {
     return this.catService.update(+id, updateCatDto);
   }
 
-  @Delete(':id')
+  @Delete('xtz/:id')
   remove(@Param('id') id: string) {
-    return this.catService.remove(+id);
+    return this.catService.remove();
   }
 }

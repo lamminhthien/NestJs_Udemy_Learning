@@ -1,3 +1,4 @@
+import { type } from 'os';
 import { Task } from 'src/task/entities/task.entity';
 import {
   AfterInsert,
@@ -9,18 +10,19 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
 
 @Entity()
 export class Todolist {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
   @Column()
   list_name: string;
 
-  @OneToMany(() => Task, (task) => task.listId)
-  reports: Task[];
+  @OneToMany(() => Task, (task) => task.todolistId)
+  tasks: Task[];
 
   @CreateDateColumn()
   createdDate: Date;

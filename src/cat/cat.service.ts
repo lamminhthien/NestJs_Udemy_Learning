@@ -20,7 +20,7 @@ export class CatService {
     return `This action updates a #${id} cat`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cat`;
+  remove() {
+    return `This action removes a #${5} cat`;
   }
 }

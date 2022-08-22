@@ -8,6 +8,7 @@ import {
   Query,
   Delete,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -28,34 +29,16 @@ export class UsersController {
   }
 
   @Post('/create')
-  createUser(@Body() body: CreateUserDto) {
-    this.usersService.create(body.user_name);
-  }
+  async createUser(@Body() body: CreateUserDto) {
+    const existUser = await this.usersService
+      .findUserByName(body.user_name)
+      .then((result) => {
+        return result;
+      });
 
-  // @UseInterceptors(new SerializeInterceptor(UserDto))
-  @Get('/find-by-id/:id')
-  async findUser(@Param('id') id: string) {
-    console.log('Handler is running');
-
-    const user = await this.usersService.findOne(id);
-    if (!user) {
-      throw new NotFoundException('user not found');
+    if (existUser !== undefined) {
+      throw new BadRequestException('This user already existing');
     }
-    return user;
-  }
-
-  @Get('/find-by-user-name')
-  findAllUser(@Query('user_name') user_name: string) {
-    return this.usersService.find(user_name);
-  }
-
-  @Delete('/delete')
-  removeUser(@Param('id') id: string) {
-    return this.usersService.remove(id);
-  }
-
-  @Patch('/update')
-  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    return this.usersService.update(id, body.user_name);
+    this.usersService.create(body.user_name);
   }
 }

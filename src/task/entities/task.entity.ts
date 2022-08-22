@@ -27,7 +27,7 @@ export class Task {
   userId: string;
 
   @Column()
-  listId: number;
+  todolistId: number;
 
   @ManyToOne(() => User, (user) => user.id, { cascade: true })
   user: User;

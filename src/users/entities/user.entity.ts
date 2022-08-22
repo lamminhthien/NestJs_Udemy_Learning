@@ -20,7 +20,7 @@ export class User {
   user_name: string;
 
   @OneToMany(() => Task, (task) => task.userId)
-  reports: Task[];
+  tasks: Task[];
 
   @CreateDateColumn()
   createdDate: Date;

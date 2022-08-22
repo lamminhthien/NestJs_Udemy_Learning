@@ -8,6 +8,7 @@ import {
   Query,
   Delete,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
@@ -21,23 +22,22 @@ import { TodolistService } from './todolist.service';
 @Serialize(TodoListDto)
 export class TodolistController {
   constructor(private todoListService: TodolistService) {}
-
   @Get('/get-all')
   getAllUser(): Promise<Todolist[]> {
     return this.todoListService.findAll();
   }
 
   @Post('/create')
-  createUser(@Body() body: CreateTodolistDto) {
-    this.todoListService.create(body.list_name);
-  }
+  async createUser(@Body() body: CreateTodolistDto) {
+    const existTodoList = await this.todoListService
+      .findTodoListByName(body.list_name)
+      .then((result) => {
+        return result;
+      });
 
-  @Get('/find-by-id/:id')
-  async findTodoList(@Param('id') id: string) {
-    const todoList = await this.todoListService.findOne(parseInt(id));
-    if (!todoList) {
-      throw new NotFoundException('Todolist not found');
+    if (existTodoList !== undefined) {
+      throw new BadRequestException('This TodoList already existing');
     }
-    return todoList;
+    this.todoListService.create(body.list_name);
   }
 }
