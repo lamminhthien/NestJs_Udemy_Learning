@@ -20,6 +20,7 @@ import { CurrentUser } from 'src/users/decorators/current-user-decorator';
 import { User } from 'src/users/entities/user.entity';
 import { CurrentTodoList } from 'src/todolist/decorators/current-todolist-decorator';
 import { Todolist } from 'src/todolist/entities/todolist.entity';
+import { UpdateTaskDto } from './dto/update-task-dto';
 
 @ApiTags('Task')
 @Controller('task')
@@ -42,7 +43,20 @@ export class TasksController {
   }
 
   @Delete('/remove-task/:id')
-  removeUser(@Param('id') id: string) {
-    return this.taskService.remove(id);
+  async removeUser(@Param('id') id: string) {
+    const taskExisting = await this.taskService.findTaskById(id);
+    if (!taskExisting) {
+      throw new NotFoundException('Cannot remove task because task not found');
+    }
+    return this.taskService.remove(taskExisting);
+  }
+
+  @Patch('/update-task/')
+  async updateTask(@Body() updateTaskDto: UpdateTaskDto) {
+    const taskExisting = await this.taskService.findTaskById(updateTaskDto.id);
+    if (!taskExisting) {
+      throw new NotFoundException('Cannot update task because task not found');
+    }
+    return this.taskService.updateTask(taskExisting, updateTaskDto.task_name);
   }
 }

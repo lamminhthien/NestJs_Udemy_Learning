@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task-dto';
 import { Todolist } from 'src/todolist/entities/todolist.entity';
 import { User } from 'src/users/entities/user.entity';
 @Injectable()
@@ -17,6 +18,11 @@ export class TaskService {
 
   async findAll(): Promise<Task[]> {
     return this.repo.find();
+  }
+
+  async findTaskById(id: string) {
+    const task = await this.repo.findOne(id);
+    return task;
   }
 
   async create(taskDto: CreateTaskDto, todolist: Todolist, user: User) {
@@ -34,11 +40,12 @@ export class TaskService {
     return TaskList;
   }
 
-  async remove(id: string) {
-    const task = await this.repo.findOne(id);
-    if (!task) {
-      throw new NotFoundException('Cannot remove task because task not found');
-    }
+  async remove(task: Task) {
     return this.repo.remove(task);
+  }
+
+  async updateTask(task: Task, task_name: string) {
+    task.task_name = task_name;
+    return this.repo.save(task);
   }
 }
