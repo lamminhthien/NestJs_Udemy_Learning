@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ReportsController } from './reports.controller';
-import { ReportsService } from './reports.service';
-import { Report } from './report.entity';
+import { ReportsController } from './task.controller';
+import { ReportsService } from './task.service';
+import { Task } from './task.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Report])],
+  imports: [TypeOrmModule.forFeature([Task])],
   controllers: [ReportsController],
   providers: [ReportsService],
 })

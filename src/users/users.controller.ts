@@ -14,19 +14,24 @@ import { UpdateUserDto } from './dtos/update-user-dto';
 import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { User } from './user.entity';
 
 @Controller('user')
 @Serialize(UserDto)
 export class UsersController {
   constructor(private usersService: UsersService) {}
+  @Get('/get-all')
+  getAllUser(): Promise<User[]> {
+    return this.usersService.findAll();
+  }
 
-  @Post('/create-user')
+  @Post('/create')
   createUser(@Body() body: CreateUserDto) {
     this.usersService.create(body.user_name);
   }
 
   // @UseInterceptors(new SerializeInterceptor(UserDto))
-  @Get('/:id')
+  @Get('/find-by-id/:id')
   async findUser(@Param('id') id: string) {
     console.log('Handler is running');
 
@@ -37,17 +42,17 @@ export class UsersController {
     return user;
   }
 
-  @Get()
+  @Get('/find-by-user-name')
   findAllUser(@Query('user_name') user_name: string) {
     return this.usersService.find(user_name);
   }
 
-  @Delete('/:id')
+  @Delete('/delete')
   removeUser(@Param('id') id: string) {
     return this.usersService.remove(parseInt(id));
   }
 
-  @Patch('/:id')
+  @Patch('/update')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return this.usersService.update(parseInt(id), body);
   }

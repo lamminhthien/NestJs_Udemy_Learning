@@ -22,6 +22,8 @@ async function bootstrap() {
     next();
   });
 
+  app.enableCors();
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

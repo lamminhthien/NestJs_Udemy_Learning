@@ -9,7 +9,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-import { Report } from 'src/reports/report.entity';
+import { Task } from 'src/task/task.entity';
 
 @Entity()
 export class User {
@@ -19,8 +19,8 @@ export class User {
   @Column()
   user_name: string;
 
-  @OneToMany(() => Report, (report) => report.userId)
-  reports: Report[];
+  @OneToMany(() => Task, (task) => task.userId)
+  reports: Task[];
 
   @CreateDateColumn()
   createdDate: Date;
