@@ -4,8 +4,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TasksModule } from './task/task.module';
-import { User } from './users/user.entity';
-import { Task } from './task/task.entity';
+import { User } from './users/entities/user.entity';
+import { Task } from './task/entities/task.entity';
+import { Todolist } from './todolist/entities/todolist.entity';
+import { TodolistModule } from './todolist/todolist.module';
 
 @Module({
   imports: [
@@ -16,11 +18,12 @@ import { Task } from './task/task.entity';
       username: 'postgres',
       password: 'thienlam',
       port: 5432,
-      entities: [User, Task],
+      entities: [User, Task, Todolist],
       synchronize: true,
     }),
     UsersModule,
     TasksModule,
+    TodolistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

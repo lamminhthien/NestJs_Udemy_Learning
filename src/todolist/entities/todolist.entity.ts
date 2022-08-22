@@ -1,3 +1,4 @@
+import { Task } from 'src/task/entities/task.entity';
 import {
   AfterInsert,
   AfterRemove,
@@ -7,23 +8,25 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-import { Task } from 'src/task/task.entity';
-
 @Entity()
-export class User {
+export class Todolist {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  user_name: string;
+  list_name: string;
 
-  @OneToMany(() => Task, (task) => task.userId)
+  @OneToMany(() => Task, (task) => task.listId)
   reports: Task[];
 
   @CreateDateColumn()
   createdDate: Date;
+
+  @UpdateDateColumn()
+  updatedDate: Date;
 
   @AfterInsert()
   logInsert() {

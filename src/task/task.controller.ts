@@ -1,4 +1,11 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('task')
-export class TasksController {}
+@ApiTags('Task')
+export class TasksController {
+  @Get('/get-all')
+  getAllUser() {
+    return 'Hello';
+  }
+}

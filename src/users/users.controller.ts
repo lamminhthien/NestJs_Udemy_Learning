@@ -9,13 +9,15 @@ import {
   Delete,
   NotFoundException,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user-dto';
 import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 
+@ApiTags('User')
 @Controller('user')
 @Serialize(UserDto)
 export class UsersController {
