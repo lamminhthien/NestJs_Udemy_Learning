@@ -6,6 +6,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
+  CreateDateColumn,
 } from 'typeorm';
 
 import { Report } from 'src/reports/report.entity';
@@ -16,13 +17,13 @@ export class User {
   id: number;
 
   @Column()
-  email: string;
-
-  @Column()
-  password: string;
+  user_name: string;
 
   @OneToMany(() => Report, (report) => report.userId)
   reports: Report[];
+
+  @CreateDateColumn()
+  createdDate: Date;
 
   @AfterInsert()
   logInsert() {

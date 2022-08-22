@@ -7,8 +7,8 @@ import { User } from './user.entity';
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  create(email: string, password: string) {
-    const user = this.repo.create({ email, password });
+  create(user_name: string) {
+    const user = this.repo.create({ user_name });
 
     return this.repo.save(user);
   }
@@ -17,8 +17,8 @@ export class UsersService {
     return this.repo.findOne(id);
   }
 
-  find(email: string) {
-    return this.repo.find({ email });
+  find(user_name: string) {
+    return this.repo.find({ user_name });
   }
 
   async update(id: number, attrs: Partial<User>) {
