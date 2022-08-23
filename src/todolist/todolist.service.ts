@@ -17,8 +17,15 @@ export class TodolistService {
 
   async create(list_name: string): Promise<Todolist> {
     const todoList = this.repo.create({ list_name });
-
     return this.repo.save(todoList);
+  }
+
+  async findTodoListByID(listId: number) {
+    const TodoList = await this.repo
+      .createQueryBuilder('todolist')
+      .where('todolist.id = :listId', { listId: listId })
+      .getMany();
+    return TodoList;
   }
 
   async findTodoListByName(list_name: string) {

@@ -22,6 +22,14 @@ export class UsersService {
     return this.repo.save(user);
   }
 
+  async findUserById(id: string) {
+    const firstUser = await this.repo
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id: id })
+      .getOne();
+    return firstUser;
+  }
+
   async findUserByName(user_name: string) {
     const firstUser = await this.repo
       .createQueryBuilder('user')

@@ -25,6 +25,14 @@ export class TaskService {
     return task;
   }
 
+  async findTaskByName(task_name: string) {
+    const firstTask = await this.repo
+      .createQueryBuilder('task')
+      .where('task.task_name = :task_name', { task_name: task_name })
+      .getOne();
+    return firstTask;
+  }
+
   async create(taskDto: CreateTaskDto, todolist: Todolist, user: User) {
     const task = this.repo.create(taskDto);
     task.user = user;
